@@ -6,9 +6,11 @@ import java.util.List;
 
 public class ReizigerDAOPsql implements ReizigerDAO {
     private Connection conn;
+    private AdresDAO aDAO;
 
-    public ReizigerDAOPsql(Connection conn) {
+    public ReizigerDAOPsql(Connection conn, AdresDAO aDAO) {
         this.conn = conn;
+        this.aDAO = aDAO;
     }
 
     @Override
@@ -110,7 +112,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             String achternaam = rs.getString("achternaam");
             LocalDate geboortedatum = new Date(rs.getDate("geboortedatum").getTime()).toLocalDate();
             Reiziger reiziger = new Reiziger(reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum);
-
+            Adres adres = aDAO.findByReiziger(reiziger);
+            reiziger.setAdres(adres);
             reizigers.add(reiziger);
         }
         return reizigers;

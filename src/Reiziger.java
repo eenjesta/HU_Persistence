@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.List;
 
 public class Reiziger {
     private int reiziger_id;
@@ -6,6 +7,8 @@ public class Reiziger {
     private String tussenvoegsel;
     private String achternaam;
     private LocalDate geboortedatum;
+    private Adres adres;
+    private List<OVChipkaart> ov_chipkaart;
 
     public Reiziger(int reiziger_id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum) {
         this.reiziger_id = reiziger_id;
@@ -19,7 +22,7 @@ public class Reiziger {
         return reiziger_id;
     }
 
-    public void setReiziger_id(Integer reiziger_id) {
+    public void setReiziger_id(int reiziger_id) {
         this.reiziger_id = reiziger_id;
     }
 
@@ -55,12 +58,28 @@ public class Reiziger {
         this.geboortedatum = geboortedatum;
     }
 
+    public Adres getAdres() {
+        return adres;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
+    public List<OVChipkaart> getOv_chipkaart() {
+        return ov_chipkaart;
+    }
+
+    public void setOv_chipkaart(List<OVChipkaart> ov_chipkaart) {
+        this.ov_chipkaart = ov_chipkaart;
+    }
+
     @Override
     public String toString() {
         if (this.tussenvoegsel != null) {
-            return String.format("#%d: %s %s %s (%s)", this.reiziger_id, this.voorletters, this.tussenvoegsel, this.achternaam, this.geboortedatum);
+            return String.format("Reiziger: {#%d %s %s %s, geb. %s, Adres {%s}}", this.reiziger_id, this.voorletters, this.tussenvoegsel, this.achternaam, this.geboortedatum, this.adres);
         } else {
-            return String.format("#%d: %s %s (%s)", this.reiziger_id, this.voorletters, this.achternaam, this.geboortedatum);
+            return String.format("Reiziger: {#%d %s %s, geb. %s, Adres {%s}}", this.reiziger_id, this.voorletters, this.achternaam, this.geboortedatum, this.adres);
         }
     }
 }

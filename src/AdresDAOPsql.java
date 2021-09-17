@@ -9,7 +9,6 @@ public class AdresDAOPsql implements AdresDAO {
 
     public AdresDAOPsql(Connection conn) {
         this.conn = conn;
-        this.rDAO = rDAO;
     }
 
     @Override
