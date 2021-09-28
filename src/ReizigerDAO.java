@@ -8,4 +8,6 @@ public interface ReizigerDAO {
     public Reiziger findById(int id) throws SQLException;
     public List<Reiziger> findByGbdatum(String datum) throws SQLException;
     public List<Reiziger> findAll() throws SQLException;
+    public void setaDAO(AdresDAO aDAO);
+    public void setoDAO(OVChipkaartDAO oDAO);
 }

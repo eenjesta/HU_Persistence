@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Reiziger {
@@ -8,7 +9,7 @@ public class Reiziger {
     private String achternaam;
     private LocalDate geboortedatum;
     private Adres adres;
-    private List<OVChipkaart> ov_chipkaarten;
+    private List<OVChipkaart> ov_chipkaarten = new ArrayList<>();
 
     public Reiziger(int reiziger_id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum) {
         this.reiziger_id = reiziger_id;
@@ -72,6 +73,49 @@ public class Reiziger {
 
     public void setOv_chipkaarten(List<OVChipkaart> ov_chipkaarten) {
         this.ov_chipkaarten = ov_chipkaarten;
+    }
+
+    public void addOv_chipkaart(OVChipkaart ov_chipkaart) {
+        List<OVChipkaart> toAdd = new ArrayList<>();
+        if (this.ov_chipkaarten.isEmpty()) {
+            this.ov_chipkaarten.add(ov_chipkaart);
+        } else {
+            for (OVChipkaart ov_chipkaart_list : this.ov_chipkaarten) {
+                if (ov_chipkaart.equals(ov_chipkaart_list)) {
+                    System.out.print("Oops deze OV-kaart bestaat al!");
+                } else {
+                    toAdd.add(ov_chipkaart);
+                }
+            }
+            this.ov_chipkaarten.addAll(toAdd);
+        }
+    }
+
+    public void updateOv_chipkaart(OVChipkaart ov_chipkaart) {
+        if (this.ov_chipkaarten.isEmpty()) {
+            System.out.print("Oops deze OV-kaart bestaat niet!");
+        } else {
+            for (OVChipkaart ov_chipkaart_list : this.ov_chipkaarten) {
+                if (ov_chipkaart.equals(ov_chipkaart_list)) {
+                    int index = this.ov_chipkaarten.indexOf(ov_chipkaart_list);
+                    this.ov_chipkaarten.set(index, ov_chipkaart);
+                }
+            }
+        }
+    }
+
+    public void deleteOv_chipkaart(OVChipkaart ov_chipkaart) {
+        List<OVChipkaart> toRemove = new ArrayList<>();
+        if (this.ov_chipkaarten.isEmpty()) {
+            System.out.print("Oops deze OV-kaart bestaat niet!");
+        } else {
+            for (OVChipkaart ov_chipkaart_list : this.ov_chipkaarten) {
+                if (ov_chipkaart.equals(ov_chipkaart_list)) {
+                    toRemove.remove(ov_chipkaart);
+                }
+            }
+            this.ov_chipkaarten.removeAll(toRemove);
+        }
     }
 
     @Override

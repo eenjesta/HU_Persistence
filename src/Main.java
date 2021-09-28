@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,9 +13,12 @@ public class Main {
             Connection conn = DriverManager.getConnection(url);
 
             AdresDAO aDAO = new AdresDAOPsql(conn);
-            OVChipkaartDAO oDAO = new OVChipkaartDAOPsql(conn);
-            ReizigerDAO rDAO = new ReizigerDAOPsql(conn, aDAO, oDAO);
-            testAdresDAO(aDAO, rDAO);
+            OVChipkaartDAOPsql oDAO = new OVChipkaartDAOPsql(conn);
+            ReizigerDAO rDAO = new ReizigerDAOPsql(conn);
+            rDAO.setaDAO(aDAO);
+            rDAO.setoDAO(oDAO);
+            oDAO.setrDAO(rDAO);
+//            testAdresDAO(aDAO, rDAO);
 
             testReizigerDAO(rDAO);
         } catch (Exception e) {
@@ -51,9 +55,9 @@ public class Main {
         System.out.println(adressen.size() + " reizigers\n");
 
         // Update een adres in de database
-        Adres appelhof_update = new Adres(7, "6678KL", "31", "Appelhof", "Utrecht", 121);
+        appelhof.setHuisnummer("31");
         System.out.print("[Test] Eerst adres huisnummer, " + appelhof.getHuisnummer() + " voor AdresDAO.update() ");
-        adao.update(appelhof_update);
+        adao.update(appelhof);
         Adres adres = adao.findById(7);
         System.out.print("[Test] Eerst adres huisnummer, " + adres.getHuisnummer() + " na AdresDAO.update() \n");
 
@@ -94,16 +98,23 @@ public class Main {
 
         // Maak een nieuwe reiziger aan en persisteer deze in de database
         String gbdatum = "1981-03-14";
-        Reiziger sietske = new Reiziger(77, "S", "", "Boers", LocalDate.parse(gbdatum));
+        String geldig_tot = "2021-03-14";
+        Reiziger sietske = new Reiziger(77, "S", null, "Boers", LocalDate.parse(gbdatum));
+        OVChipkaart ov_chipkaart = new OVChipkaart(57788, LocalDate.parse(geldig_tot), 1, 2.50, sietske);
+        OVChipkaart ov_chipkaart1 = new OVChipkaart(57789, LocalDate.parse(geldig_tot), 1, 5, sietske);
         System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
+        sietske.addOv_chipkaart(ov_chipkaart);
+        sietske.addOv_chipkaart(ov_chipkaart1);
         rdao.save(sietske);
         reizigers = rdao.findAll();
         System.out.println(reizigers.size() + " reizigers\n");
 
         // Update een reiziger in de database
-        Reiziger sietske_update = new Reiziger(77, "S", "", "Boeren", LocalDate.parse(gbdatum));
+        sietske.setAchternaam("Boeren");
+        ov_chipkaart.setSaldo(10.00);
         System.out.print("[Test] Eerst reizigers achternaam, " + sietske.getAchternaam() + " voor ReizigerDAO.update() ");
-        rdao.update(sietske_update);
+        sietske.updateOv_chipkaart(ov_chipkaart);
+        rdao.update(sietske);
         Reiziger reiziger = rdao.findById(77);
         System.out.print("[Test] Eerst reizigers achternaam, " + reiziger.getAchternaam() + " na ReizigerDAO.update() \n");
 

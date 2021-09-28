@@ -9,10 +9,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     private AdresDAO aDAO;
     private OVChipkaartDAO oDAO;
 
-    public ReizigerDAOPsql(Connection conn, AdresDAO aDAO, OVChipkaartDAO oDAO) {
+    public ReizigerDAOPsql(Connection conn) {
         this.conn = conn;
-        this.aDAO = aDAO;
-        this.oDAO = oDAO;
     }
 
     @Override
@@ -26,6 +24,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             pst.setString(4, reiziger.getAchternaam());
             pst.setDate(5, Date.valueOf(reiziger.getGeboortedatum()));
             pst.executeUpdate();
+            for (OVChipkaart ov_chipkaart : reiziger.getOv_chipkaarten()) {
+                oDAO.save(ov_chipkaart);
+            }
             return true;
         } catch (Exception e) {
             System.out.printf("Oops something went wrong: %s%n", e);
@@ -36,6 +37,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     @Override
     public boolean update(Reiziger reiziger) throws SQLException {
         try {
+            for (OVChipkaart ov_chipkaart : reiziger.getOv_chipkaarten()) {
+                oDAO.update(ov_chipkaart);
+            }
             String q = "update reiziger set reiziger_id=?, voorletters=?, tussenvoegsel=?, achternaam=?, geboortedatum=? where reiziger_id=?";
             PreparedStatement pst = this.conn.prepareStatement(q);
             pst.setInt(1, reiziger.getReiziger_id());
@@ -55,6 +59,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     @Override
     public boolean delete(Reiziger reiziger) throws SQLException {
         try {
+            for (OVChipkaart ov_chipkaart : reiziger.getOv_chipkaarten()) {
+                oDAO.delete(ov_chipkaart);
+            }
             String q = "delete from reiziger where reiziger_id=?";
             PreparedStatement pst = this.conn.prepareStatement(q);
             pst.setInt(1, reiziger.getReiziger_id());
@@ -123,5 +130,13 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             reizigers.add(reiziger);
         }
         return reizigers;
+    }
+
+    public void setaDAO(AdresDAO aDAO) {
+        this.aDAO = aDAO;
+    }
+
+    public void setoDAO(OVChipkaartDAO oDAO) {
+        this.oDAO = oDAO;
     }
 }
