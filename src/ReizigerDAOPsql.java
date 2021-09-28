@@ -7,10 +7,12 @@ import java.util.List;
 public class ReizigerDAOPsql implements ReizigerDAO {
     private Connection conn;
     private AdresDAO aDAO;
+    private OVChipkaartDAO oDAO;
 
-    public ReizigerDAOPsql(Connection conn, AdresDAO aDAO) {
+    public ReizigerDAOPsql(Connection conn, AdresDAO aDAO, OVChipkaartDAO oDAO) {
         this.conn = conn;
         this.aDAO = aDAO;
+        this.oDAO = oDAO;
     }
 
     @Override
@@ -71,12 +73,15 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         pst.setInt(1, id);
         ResultSet rs = pst.executeQuery();
         rs.next();
-        return new Reiziger(
-            rs.getInt("reiziger_id"),
-            rs.getString("voorletters"),
-            rs.getString("tussenvoegsel"),
-            rs.getString("achternaam"),
-            new Date(rs.getDate("geboortedatum").getTime()).toLocalDate());
+        Reiziger reiziger = new Reiziger(
+                rs.getInt("reiziger_id"),
+                rs.getString("voorletters"),
+                rs.getString("tussenvoegsel"),
+                rs.getString("achternaam"),
+                new Date(rs.getDate("geboortedatum").getTime()).toLocalDate());
+        reiziger.setAdres(aDAO.findByReiziger(reiziger));
+        reiziger.setOv_chipkaarten(oDAO.findByReiziger(reiziger));
+        return reiziger;
     }
 
     @Override
@@ -93,7 +98,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             String achternaam = rs.getString("achternaam");
             LocalDate geboortedatum = new Date(rs.getDate("geboortedatum").getTime()).toLocalDate();
             Reiziger reiziger = new Reiziger(reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum);
-
+            reiziger.setAdres(aDAO.findByReiziger(reiziger));
+            reiziger.setOv_chipkaarten(oDAO.findByReiziger(reiziger));
             reizigers.add(reiziger);
         }
         return reizigers;
@@ -112,8 +118,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             String achternaam = rs.getString("achternaam");
             LocalDate geboortedatum = new Date(rs.getDate("geboortedatum").getTime()).toLocalDate();
             Reiziger reiziger = new Reiziger(reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum);
-            Adres adres = aDAO.findByReiziger(reiziger);
-            reiziger.setAdres(adres);
+            reiziger.setAdres(aDAO.findByReiziger(reiziger));
+            reiziger.setOv_chipkaarten(oDAO.findByReiziger(reiziger));
             reizigers.add(reiziger);
         }
         return reizigers;

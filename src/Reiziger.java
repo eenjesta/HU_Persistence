@@ -8,7 +8,7 @@ public class Reiziger {
     private String achternaam;
     private LocalDate geboortedatum;
     private Adres adres;
-    private List<OVChipkaart> ov_chipkaart;
+    private List<OVChipkaart> ov_chipkaarten;
 
     public Reiziger(int reiziger_id, String voorletters, String tussenvoegsel, String achternaam, LocalDate geboortedatum) {
         this.reiziger_id = reiziger_id;
@@ -66,20 +66,20 @@ public class Reiziger {
         this.adres = adres;
     }
 
-    public List<OVChipkaart> getOv_chipkaart() {
-        return ov_chipkaart;
+    public List<OVChipkaart> getOv_chipkaarten() {
+        return ov_chipkaarten;
     }
 
-    public void setOv_chipkaart(List<OVChipkaart> ov_chipkaart) {
-        this.ov_chipkaart = ov_chipkaart;
+    public void setOv_chipkaarten(List<OVChipkaart> ov_chipkaarten) {
+        this.ov_chipkaarten = ov_chipkaarten;
     }
 
     @Override
     public String toString() {
         if (this.tussenvoegsel != null) {
-            return String.format("Reiziger: {#%d %s %s %s, geb. %s, Adres {%s}}", this.reiziger_id, this.voorletters, this.tussenvoegsel, this.achternaam, this.geboortedatum, this.adres);
+            return String.format("Reiziger: {#%d %s %s %s, geb. %s, Adres {%s}, OV-chipkaarten {%s}}", this.reiziger_id, this.voorletters, this.tussenvoegsel, this.achternaam, this.geboortedatum, this.adres, this.ov_chipkaarten);
         } else {
-            return String.format("Reiziger: {#%d %s %s, geb. %s, Adres {%s}}", this.reiziger_id, this.voorletters, this.achternaam, this.geboortedatum, this.adres);
+            return String.format("Reiziger: {#%d %s %s, geb. %s, Adres {%s}, OV-chipkaarten {%s}}", this.reiziger_id, this.voorletters, this.achternaam, this.geboortedatum, this.adres, this.ov_chipkaarten);
         }
     }
 }

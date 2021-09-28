@@ -54,4 +54,9 @@ public class OVChipkaart {
      public void setReiziger_id(int reiziger_id) {
           this.reiziger_id = reiziger_id;
      }
+
+     @Override
+     public String toString() {
+          return String.format("#%d: kaartnummer: %d, geldig tot: %s, klasse: %d, saldo: %,.2f", this.reiziger_id, this.kaart_nummer, this.geldig_tot, this.klasse, this.saldo);
+     }
 }
