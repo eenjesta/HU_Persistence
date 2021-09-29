@@ -111,7 +111,7 @@ public class Reiziger {
         } else {
             for (OVChipkaart ov_chipkaart_list : this.ov_chipkaarten) {
                 if (ov_chipkaart.equals(ov_chipkaart_list)) {
-                    toRemove.remove(ov_chipkaart);
+                    toRemove.add(ov_chipkaart);
                 }
             }
             this.ov_chipkaarten.removeAll(toRemove);

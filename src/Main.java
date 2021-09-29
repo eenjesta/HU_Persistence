@@ -114,6 +114,7 @@ public class Main {
         ov_chipkaart.setSaldo(10.00);
         System.out.print("[Test] Eerst reizigers achternaam, " + sietske.getAchternaam() + " voor ReizigerDAO.update() ");
         sietske.updateOv_chipkaart(ov_chipkaart);
+        sietske.deleteOv_chipkaart(ov_chipkaart);
         rdao.update(sietske);
         Reiziger reiziger = rdao.findById(77);
         System.out.print("[Test] Eerst reizigers achternaam, " + reiziger.getAchternaam() + " na ReizigerDAO.update() \n");

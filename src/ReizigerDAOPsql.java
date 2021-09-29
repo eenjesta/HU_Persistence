@@ -37,8 +37,13 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     @Override
     public boolean update(Reiziger reiziger) throws SQLException {
         try {
+            List<OVChipkaart> current_ov_chipkaarten = oDAO.findByReiziger(reiziger);
+            for (OVChipkaart current_ov_chipkaart : current_ov_chipkaarten) {
+                oDAO.delete(current_ov_chipkaart);
+            }
+
             for (OVChipkaart ov_chipkaart : reiziger.getOv_chipkaarten()) {
-                oDAO.update(ov_chipkaart);
+                oDAO.save(ov_chipkaart);
             }
             String q = "update reiziger set reiziger_id=?, voorletters=?, tussenvoegsel=?, achternaam=?, geboortedatum=? where reiziger_id=?";
             PreparedStatement pst = this.conn.prepareStatement(q);
