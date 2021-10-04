@@ -1,5 +1,6 @@
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class OVChipkaart {
@@ -8,6 +9,7 @@ public class OVChipkaart {
      private int klasse;
      private double saldo;
      private Reiziger reiziger;
+     private List<Product> producten;
 
      public OVChipkaart(int kaart_nummer, LocalDate geldig_tot, int klasse, double saldo, Reiziger reiziger) {
           this.kaart_nummer = kaart_nummer;
@@ -55,6 +57,14 @@ public class OVChipkaart {
 
      public void setReiziger(Reiziger reiziger) {
           this.reiziger = reiziger;
+     }
+
+     public List<Product> getProducten() {
+          return producten;
+     }
+
+     public void setProducten(List<Product> producten) {
+          this.producten = producten;
      }
 
      @Override

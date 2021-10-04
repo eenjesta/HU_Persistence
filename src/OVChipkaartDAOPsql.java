@@ -99,7 +99,6 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
             double saldo = rs.getDouble("saldo");
             Reiziger reiziger = rDAO.findById(rs.getInt("reiziger_id"));
             OVChipkaart ov_chipkaart = new OVChipkaart(kaartnummer, geldig_tot, klasse, saldo, reiziger);
-
             ov_chipkaarten.add(ov_chipkaart);
         }
         return ov_chipkaarten;
@@ -117,6 +116,28 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
             LocalDate geldig_tot = new Date(rs.getDate("geldig_tot").getTime()).toLocalDate();
             int klasse = rs.getInt("klasse");
             double saldo = rs.getDouble("saldo");
+            OVChipkaart ov_chipkaart = new OVChipkaart(kaartnummer, geldig_tot, klasse, saldo, reiziger);
+
+            ov_chipkaarten.add(ov_chipkaart);
+        }
+        return ov_chipkaarten;
+    }
+
+    @Override
+    public List<OVChipkaart> findByProduct(Product product) throws SQLException {
+        String q = "select * from ov_chipkaart\n" +
+                "inner join ov_chipkaart_product ocp on ov_chipkaart.kaart_nummer = ocp.kaart_nummer\n" +
+                "where ocp.product_nummer=?";
+        PreparedStatement pst = this.conn.prepareStatement(q);
+        pst.setInt(1, product.getProduct_nummer());
+        List<OVChipkaart> ov_chipkaarten = new ArrayList<>();
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+            int kaartnummer = rs.getInt("kaart_nummer");
+            LocalDate geldig_tot = new Date(rs.getDate("geldig_tot").getTime()).toLocalDate();
+            int klasse = rs.getInt("klasse");
+            double saldo = rs.getDouble("saldo");
+            Reiziger reiziger = rDAO.findById(rs.getInt("reiziger_id"));
             OVChipkaart ov_chipkaart = new OVChipkaart(kaartnummer, geldig_tot, klasse, saldo, reiziger);
 
             ov_chipkaarten.add(ov_chipkaart);

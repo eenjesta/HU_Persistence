@@ -15,12 +15,15 @@ public class Main {
             AdresDAO aDAO = new AdresDAOPsql(conn);
             OVChipkaartDAOPsql oDAO = new OVChipkaartDAOPsql(conn);
             ReizigerDAO rDAO = new ReizigerDAOPsql(conn);
+            ProductDAO pDAO = new ProductDAOPsql(conn);
             rDAO.setaDAO(aDAO);
             rDAO.setoDAO(oDAO);
             oDAO.setrDAO(rDAO);
-//            testAdresDAO(aDAO, rDAO);
+            oDAO.setpDAO(pDAO);
+            pDAO.setoDAO(oDAO);
 
             testReizigerDAO(rDAO);
+            testProductDAO(pDAO);
         } catch (Exception e) {
             System.out.println("Oops something went wrong: " + e);
         }
@@ -114,16 +117,15 @@ public class Main {
         ov_chipkaart.setSaldo(10.00);
         System.out.print("[Test] Eerst reizigers achternaam, " + sietske.getAchternaam() + " voor ReizigerDAO.update() ");
         sietske.updateOv_chipkaart(ov_chipkaart);
-        sietske.deleteOv_chipkaart(ov_chipkaart);
         rdao.update(sietske);
         Reiziger reiziger = rdao.findById(77);
         System.out.print("[Test] Eerst reizigers achternaam, " + reiziger.getAchternaam() + " na ReizigerDAO.update() \n");
 
         // Verwijder een reiziger uit de database
-        System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.delete() ");
-        rdao.delete(sietske);
-        reizigers = rdao.findAll();
-        System.out.println(reizigers.size() + " reizigers\n");
+//        System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.delete() ");
+//        rdao.delete(sietske);
+//        reizigers = rdao.findAll();
+//        System.out.println(reizigers.size() + " reizigers\n");
 
         // Haal een reiziger op aan de hand van zijn ID (4) en dit moet F Memari zijn
         System.out.println("[Test] ReizigerDAO.findById(4) geeft de volgende reiziger:");
@@ -137,5 +139,52 @@ public class Main {
         }
         System.out.println();
 
+    }
+
+    /**
+     * P2. Reiziger DAO: persistentie van een klasse
+     *
+     * Deze methode test de CRUD-functionaliteit van de Reiziger DAO
+     *
+     * @throws SQLException
+     */
+    private static void testProductDAO(ProductDAO pdao) throws SQLException {
+        // Haal alle producten op uit de database
+        List<Product> producten = pdao.findAll();
+        System.out.println("[Test] ProductDAO.findAll() geeft de volgende producten:");
+        for (Product p : producten) {
+            System.out.println(p);
+        }
+        System.out.println();
+
+        // Maak een nieuw product aan en persisteer deze in de database
+        String gbdatum = "1981-03-14";
+        String geldig_tot = "2021-03-14";
+        Product product = new Product(7, "SDOV", "Studenten OV", 12.55);
+        System.out.print("[Test] Eerst " + producten.size() + " reizigers, na ProductenDAO.save() ");
+        Reiziger sietske = new Reiziger(77, "S", null, "Boers", LocalDate.parse(gbdatum));
+        OVChipkaart ov_chipkaart = new OVChipkaart(57788, LocalDate.parse(geldig_tot), 1, 2.50, sietske);
+        OVChipkaart ov_chipkaart1 = new OVChipkaart(57789, LocalDate.parse(geldig_tot), 1, 5, sietske);
+        product.addOv_chipkaart(ov_chipkaart);
+        product.addOv_chipkaart(ov_chipkaart1);
+        pdao.save(product);
+        producten = pdao.findAll();
+        System.out.println(producten.size() + " reizigers\n");
+
+        // Update een product in de database
+        product.setNaam("Studenten OV");
+        System.out.print("[Test] Eerst product naam, " + product.getNaam() + " voor ProductenDAO.update() ");
+        pdao.update(product);
+
+        // Verwijder een product uit de database
+        System.out.print("[Test] Eerst " + producten.size() + " producten, na ProductenDAO.delete() ");
+        pdao.delete(product);
+        producten = pdao.findAll();
+        System.out.println(producten.size() + " producten\n");
+
+        // Haal een adres op aan de hand van een reiziger
+        System.out.println("[Test] AdresDAO.findByReiziger() geeft de volgende reizigers:");
+        List<Product> productenr = pdao.findByOVChipkaart(ov_chipkaart);
+        System.out.println(productenr);
     }
 }
